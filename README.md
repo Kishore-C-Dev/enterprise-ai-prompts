@@ -41,7 +41,7 @@ On-demand assistants invoked in Copilot Chat. Each agent uses tools to read your
 | `full-stack-code-reviewer` | Primary pre-PR review — comprehensive across correctness, security, tests, API, observability, and docs |
 | `pr-description-writer` | Generate a structured PR description with impact, risks, rollback plan, and reviewer focus areas |
 | `test-writer` | Generate unit, integration, regression, and contract tests for the detected stack |
-| `documentation-writer` | Identify and generate missing README, API, config, runbook, and migration docs |
+| `documentation-writer` | Write missing or outdated docs directly to files — README, `docs/api.md`, `docs/configuration.md`, `docs/runbook.md`, `docs/migration.md`, and OpenAPI YAML |
 | `incident-debugger` | Analyze stack traces, logs, and recent changes to find root cause and fix options |
 | `security-reviewer` | Deep OWASP Top 10 security audit with Blocker/Major/Minor findings |
 | `architecture-reviewer` | Principal engineer lens: scalability, blast radius, API contracts, ADR recommendations |
@@ -139,7 +139,15 @@ cp .github/agents/full-stack-code-reviewer.agent.md /path/to/project/.github/age
 3. Type `@` followed by the agent name. It appears in the autocomplete list.
 4. Add your prompt after the agent name and press Enter.
 
-Agents use tools automatically (`codebase`, `search`, `changes`, `problems`) — you do not need to specify them.
+Agents use tools automatically — you do not need to specify them. The tools available vary by agent:
+
+| Tool | Used by |
+|---|---|
+| `codebase` | All agents — reads files in the workspace |
+| `search` | All agents — searches the codebase for symbols and patterns |
+| `changes` | Review and writing agents — reads the current branch diff |
+| `problems` | Review agents — surfaces compile and lint errors |
+| `edit` | `documentation-writer`, `test-writer` — writes content directly to files |
 
 ### How to invoke a prompt (slash command)
 
@@ -254,16 +262,39 @@ Copy and adapt these in Copilot Chat (Agent mode — `@agent-name prompt`):
 
 ### Documentation
 
+The `documentation-writer` agent uses the `edit` tool to write directly to files — it does not print content to the chat window. After it runs, the files below are created or updated on disk and appear as changes in your working tree.
+
+**Where each doc type is written:**
+
+| What you ask for | File written | Format |
+|---|---|---|
+| Setup, run, env var, or config change | `README.md` | Markdown |
+| New or changed API endpoint | `docs/api.md` | Markdown |
+| OpenAPI spec update | `openapi.yaml` or `docs/openapi.yaml` | OpenAPI 3.x YAML |
+| New or changed config property / env var | `docs/configuration.md` | Markdown |
+| Architecture or component change | `docs/architecture.md` | Markdown + Mermaid |
+| Breaking change or migration steps | `docs/migration.md` | Markdown |
+| New error, alert, or failure mode | `docs/troubleshooting.md` | Markdown |
+| New alert or on-call procedure | `docs/runbook.md` | Markdown |
+| Changed deployment steps | `docs/deployment.md` | Markdown |
+| No `docs/` directory exists yet | Falls back to `README.md` | Markdown |
+
+If the agent cannot determine something from the code alone (e.g., a deployment URL or SLA), it writes a `> **Documentation gap:**` placeholder into the file so the author knows what to fill in manually.
+
 ```
-@documentation-writer My changes add a new /api/v1/refunds endpoint and a REFUND_TIMEOUT_SECONDS environment variable. Generate the API docs and configuration reference updates.
+@documentation-writer My changes add a new /api/v1/refunds endpoint and a REFUND_TIMEOUT_SECONDS environment variable. Write the API docs and configuration reference.
 ```
 
 ```
-@documentation-writer Review the changes in this branch and identify what README sections, config docs, or runbook entries need updating.
+@documentation-writer Review the changes in this branch and update any README sections, config docs, or runbook entries that need changing.
 ```
 
 ```
-@documentation-writer The order status field was renamed from 'status' to 'orderStatus'. Write a migration guide section for consumers of the v1 API.
+@documentation-writer The order status field was renamed from 'status' to 'orderStatus'. Write a migration guide for consumers of the v1 API.
+```
+
+```
+@documentation-writer A new PaymentTimeoutException was added. Add a troubleshooting entry and a runbook section describing what triggers it and how on-call should respond.
 ```
 
 ### PR description
