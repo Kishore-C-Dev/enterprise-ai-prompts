@@ -5,6 +5,27 @@ description: "Use when writing or reviewing security-sensitive code — covers O
 
 # Security Instructions
 
+## Blocking Issues (Blocker Severity)
+
+The following are **Blocker** findings that must be resolved before merge:
+
+- Hardcoded credentials, secrets, API keys, tokens, private keys, or certificates in source files, config files, or test fixtures.
+- Logging of secrets, tokens, passwords, authorization headers, session identifiers, account numbers, SSNs, card numbers, or customer PII.
+- Missing or bypassable authorization checks before reading or modifying protected resources.
+- Injection vulnerabilities: SQL, NoSQL, LDAP, XPath, shell, template, or expression-language construction using unsanitised user input.
+- Unsafe deserialization of untrusted payloads (Java `ObjectInputStream`, `Deserialize<dynamic>`, `eval` with external input).
+- Path traversal: file paths constructed from user input without validation and normalisation.
+- Insecure file upload: no MIME type validation, no size limits, or files stored in a web-accessible location.
+- Weak cryptography: MD5, SHA-1, or plain SHA-256 for passwords; ECB mode; deprecated TLS (1.0/1.1); custom crypto.
+- TLS validation disabled in any environment (`setSSLSocketFactory` with trust-all, `ServerCertificateCustomValidationCallback` returning true, `rejectUnauthorized: false`).
+- CORS configured with `*` origin on authenticated APIs or APIs handling sensitive data.
+- Debug endpoints, verbose stack traces, or Spring Boot Actuator sensitive endpoints (`/env`, `/heapdump`) exposed without authentication in production.
+- Insecure production configuration: debug mode enabled, detailed error pages on, default credentials unchanged.
+- Dependencies with known critical CVEs introduced or unpinned.
+- Container images running as root without justification; `privileged: true` without justification; secrets baked into image layers.
+
+---
+
 ## All Stacks
 
 - Never add secrets, credentials, tokens, certificates, private keys, or API keys to source files or test fixtures.

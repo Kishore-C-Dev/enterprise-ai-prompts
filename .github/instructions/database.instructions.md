@@ -13,7 +13,7 @@ description: "Use when writing or reviewing database access code, queries, migra
 - Avoid unbounded queries: always apply `LIMIT`/`TOP`/`Take` and pagination for list endpoints; never return all rows of a large table.
 - Define indexes for columns used in frequent `WHERE`, `JOIN`, and `ORDER BY` clauses; review execution plans for new queries on large tables.
 - Keep schema migrations backward compatible when possible: add columns as nullable or with defaults; rename in two phases (add → backfill → remove old).
-- Avoid destructive migrations (column drops, table renames, type changes) without a rollback plan and a maintenance window.
+- Avoid destructive migrations (column drops, table renames, type changes) without a rollback plan and a maintenance window. Document the rollback steps in the migration file header or PR description.
 - Do not expose raw database error messages, constraint names, or SQL details to API consumers.
 - Handle concurrent write conflicts: use optimistic locking (version columns / ETags) or pessimistic locking where appropriate; document the choice.
 - Close all connections and cursors promptly; use connection pooling; configure pool size, timeout, and overflow settings explicitly.

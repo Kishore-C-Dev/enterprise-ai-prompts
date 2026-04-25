@@ -15,7 +15,7 @@ When assisting with code, prioritise in this order:
 ## Universal Standards (All Languages)
 
 - Never commit secrets, tokens, passwords, keys, or certificates to source.
-- Never log PII, credentials, tokens, session IDs, card numbers, or sensitive payloads.
+- Never log or suggest logging: secrets, tokens, passwords, account numbers, SSNs, customer PII, authorization headers, session identifiers, card numbers (PAN), or sensitive request/response payloads.
 - Validate all inputs at system boundaries: HTTP controllers, message consumers, scheduled jobs, CLI entrypoints.
 - Use parameterised queries — never concatenate user input into SQL, LDAP, or shell commands.
 - Every external call (HTTP, DB, messaging, cache) must have a configured timeout.
@@ -25,6 +25,8 @@ When assisting with code, prioritise in this order:
 - Avoid shared mutable state and non-thread-safe statics.
 - Use structured (JSON) logging in all environments.
 - Propagate correlation IDs, trace IDs, and request IDs across service boundaries.
+- Require meaningful tests for business logic and all failure paths — untested critical paths are a Blocker.
+- Require clear documentation updates for any behavioral, setup, API, configuration, or operational changes.
 
 ## Code Review Behaviour
 
@@ -42,12 +44,12 @@ When reviewing code, produce findings in this format for each issue:
 
 | Level | Meaning |
 |---|---|
-| Critical | Data loss, security breach, production outage, or broken build |
-| High | Likely bug, broken contract, missing auth, unsafe retry or transaction |
-| Medium | Partial failure handling, observability gap, incomplete tests, maintainability debt |
-| Low | Minor readability or consistency improvement |
+| Blocker | Data loss, security breach, production outage, broken build, or missing auth — must fix before merge |
+| Major | Likely bug, broken contract, unsafe retry or transaction, missing test for critical path — strong recommendation to fix |
+| Minor | Partial failure handling, observability gap, maintainability debt — fix at reviewer/author discretion |
+| Question | Needs clarification before the reviewer can assess impact |
 
-End every review with a **Merge Recommendation**: one of `Safe to merge`, `Safe to merge after minor fixes`, `Needs changes before merge`, or `High risk — do not merge yet`.
+End every review with a **Merge Recommendation**: one of `Safe to merge`, `Safe to merge after minor fixes`, `Needs changes before merge`, or `Do not merge`.
 
 Avoid nitpicks unless they materially improve production quality.
 

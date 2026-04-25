@@ -69,21 +69,21 @@ Work through the OWASP Top 10 (2021) for the changed code:
 ## Security Audit Summary
 Overall security posture and risk level (2–3 sentences).
 
-## Critical Findings
-Vulnerabilities that could lead to data breach, auth bypass, or injection. Must be fixed before merge.
+## Blocker Findings
+Vulnerabilities that could lead to data breach, auth bypass, injection, or secrets exposure. Must be fixed before merge.
 
-## High Findings
-Vulnerabilities with significant risk that should be fixed soon.
+## Major Findings
+Vulnerabilities with significant risk that should be fixed before or shortly after merge.
 
-## Medium Findings
-Weaknesses that reduce defence-in-depth or violate secure coding standards.
+## Minor Findings
+Weaknesses that reduce defence-in-depth or violate secure coding standards; fix at discretion.
 
-## Low Findings
-Minor hardening improvements.
+## Minor Hardening
+Low-risk improvements that improve security posture incrementally.
 
 ## Dependency Vulnerabilities
 Any CVEs identified in added or changed dependencies.
 
 ## Recommendation
-Approved for merge | Approved after critical/high fixes | Do not merge — security review required
+Safe to merge | Safe to merge after Blocker/Major fixes | Do not merge — security review required
 ```

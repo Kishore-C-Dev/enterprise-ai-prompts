@@ -16,6 +16,8 @@ description: "Use when writing or reviewing unit tests, integration tests, or te
 - Keep fixtures small, readable, and specific to the scenario; avoid shared mutable test state.
 - Verify important side effects: emitted events, DB writes, outbound HTTP calls. Only verify logs and metrics when they are part of the observable contract.
 - Use mocks for external dependencies in unit tests; use real (or containerised) dependencies in integration tests.
+- Require tests for all bug fixes — a fix without a failing test that now passes is incomplete.
+- Require contract tests for public API changes where the API has external consumers; verify request/response shape and backward compatibility.
 
 ## Java
 
