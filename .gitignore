@@ -1,0 +1,38 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnp.*
+
+# Environment
+.env
+.env.*
+!.env.example
+*.local
+
+# Build artefacts
+dist/
+build/
+out/
+target/
+bin/
+obj/
+
+# Logs
+*.log
+logs/
